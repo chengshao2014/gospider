@@ -18,6 +18,8 @@ var (
 
 var (
 	ErrOutputFieldsNotMatchOutputRow = errors.New("output fields not match out put row")
-	ErrTooManyOutputTables           = errors.New("too many output tables")
-	ErrOutputToMultipleTableDisabled = errors.New("output to multiple tables disabled")
+)
+
+var (
+	ErrCronTaskDuplicated = errors.New("cron task is Duplicated")
 )

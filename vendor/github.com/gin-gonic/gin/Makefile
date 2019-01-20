@@ -1,6 +1,5 @@
 GOFMT ?= gofmt "-s"
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
-VETPACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /examples/)
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 
 all: install
@@ -27,7 +26,7 @@ fmt-check:
 	fi;
 
 vet:
-	go vet $(VETPACKAGES)
+	go vet $(PACKAGES)
 
 deps:
 	@hash govendor > /dev/null 2>&1; if [ $$? -ne 0 ]; then \

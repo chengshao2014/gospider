@@ -19,7 +19,7 @@ What the manager does is providing a series of simple methods which help you set
 ```go
 
 import (
-	"github.com/didi/gendry/manager"
+	"github.com/didichuxing/gendry/manager"
 	_ "github.com/go-sql-driver/mysql"
 )
 

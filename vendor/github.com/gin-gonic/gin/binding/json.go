@@ -5,8 +5,6 @@
 package binding
 
 import (
-	"bytes"
-	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin/json"
@@ -24,15 +22,7 @@ func (jsonBinding) Name() string {
 }
 
 func (jsonBinding) Bind(req *http.Request, obj interface{}) error {
-	return decodeJSON(req.Body, obj)
-}
-
-func (jsonBinding) BindBody(body []byte, obj interface{}) error {
-	return decodeJSON(bytes.NewReader(body), obj)
-}
-
-func decodeJSON(r io.Reader, obj interface{}) error {
-	decoder := json.NewDecoder(r)
+	decoder := json.NewDecoder(req.Body)
 	if EnableDecoderUseNumber {
 		decoder.UseNumber()
 	}

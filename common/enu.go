@@ -1,10 +1,6 @@
 package common
 
-import (
-	"errors"
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 type TaskStatus uint8
 
@@ -28,8 +24,6 @@ var tsMap = map[TaskStatus]string{
 	TaskStatusRunningTimeout:   "运行超时",
 }
 
-var InvalidTaskStatus = errors.New("invalid task status")
-
 func (ts TaskStatus) String() string {
 	s, ok := tsMap[ts]
 	if !ok {
@@ -38,32 +32,6 @@ func (ts TaskStatus) String() string {
 	return s
 }
 
-func ParseTaskStatusFromString(s string) (TaskStatus, error) {
-	switch s {
-	case "未知状态":
-		return TaskStatusUnknown, nil
-	case "运行中":
-		return TaskStatusRunning, nil
-	case "暂停":
-		return TaskStatusPaused, nil
-	case "停止":
-		return TaskStatusStopped, nil
-	case "异常退出":
-		return TaskStatusUnexceptedExited, nil
-	case "完成":
-		return TaskStatusCompleted, nil
-	case "运行超时":
-		return TaskStatusRunningTimeout, nil
-	}
-	return TaskStatusUnknown, InvalidTaskStatus
-}
-
 func (ts TaskStatus) MarshalJSON() ([]byte, error) {
 	return []byte("\"" + ts.String() + "\""), nil
-}
-
-func (ts *TaskStatus) UnmarshalJSON(data []byte) (err error) {
-	s := strings.Trim(strings.ToUpper(string(data)), "\"")
-	*ts, err = ParseTaskStatusFromString(s)
-	return
 }

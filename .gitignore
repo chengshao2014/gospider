@@ -17,6 +17,3 @@
 .idea/
 node_modules/
 _example/_example
-main
-
-package-lock.json

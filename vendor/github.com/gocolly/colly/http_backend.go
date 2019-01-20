@@ -28,8 +28,6 @@ import (
 	"sync"
 	"time"
 
-	"compress/gzip"
-
 	"github.com/gobwas/glob"
 )
 
@@ -170,7 +168,7 @@ func (h *httpBackend) Do(request *http.Request, bodySize int) (*Response, error)
 		defer func(r *LimitRule) {
 			randomDelay := time.Duration(0)
 			if r.RandomDelay != 0 {
-				randomDelay = time.Duration(rand.Int63n(int64(r.RandomDelay)))
+				randomDelay = time.Duration(rand.Intn(int(r.RandomDelay)))
 			}
 			time.Sleep(r.Delay + randomDelay)
 			<-r.waitChan
@@ -181,19 +179,11 @@ func (h *httpBackend) Do(request *http.Request, bodySize int) (*Response, error)
 	if err != nil {
 		return nil, err
 	}
-	if res.Request != nil {
-		*request = *res.Request
-	}
+	*request = *res.Request
 
 	var bodyReader io.Reader = res.Body
 	if bodySize > 0 {
 		bodyReader = io.LimitReader(bodyReader, int64(bodySize))
-	}
-	if !res.Uncompressed && res.Header.Get("Content-Encoding") == "gzip" {
-		bodyReader, err = gzip.NewReader(bodyReader)
-		if err != nil {
-			return nil, err
-		}
 	}
 	body, err := ioutil.ReadAll(bodyReader)
 	defer res.Body.Close()
